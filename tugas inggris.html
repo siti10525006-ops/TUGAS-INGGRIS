@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Plan - Rapikan Harimu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#D6266E;
+    --forest-2:#AD1958;
+    --marigold:#FFD23F;
+    --marigold-dark:#D9A400;
+    --mint:#4CAF50;
+    --mint-dark:#2E7D32;
+    --coral:#FF5C93;
+    --coral-dark:#D93E75;
+    --paper:#FBF5EE;
+    --card:#FFFFFF;
+    --ink:#1B2420;
+    --slate:#727C77;
+    --slate-light:#AEB6B0;
+    --line:#E4E1D8;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:linear-gradient(180deg,#2B0A1E 0%,#4A0F30 55%,#2B0A1E 100%);
+    min-height:100vh;
+    font-family:'Inter',sans-serif;
+    color:var(--ink);
+    display:flex;align-items:flex-start;justify-content:center;
+    padding:32px 12px;
+  }
+  .display{font-family:'Baloo 2',sans-serif;font-weight:700;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+
+  .phone{
+    width:390px;max-width:100%;height:820px;background:var(--paper);
+    border-radius:40px;border:10px solid #240816;
+    box-shadow:0 30px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+    position:relative;overflow:hidden;display:flex;flex-direction:column;
+  }
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:22px;background:#240816;border-radius:0 0 16px 16px;z-index:50;}
+  .statusbar{height:34px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:12px;font-weight:700;background:var(--paper);}
+  .screens{flex:1;position:relative;overflow:hidden;}
+  .screen{position:absolute;inset:0;overflow-y:auto;-ms-overflow-style:none;scrollbar-width:none;display:none;flex-direction:column;background:var(--paper);animation:fadeIn .28s ease;}
+  .screen::-webkit-scrollbar{display:none;}
+  .screen.active{display:flex;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .pad{padding:20px 20px 100px;}
+  .pad-nonav{padding:20px 20px 32px;}
+  .row{display:flex;align-items:center;}
+  .between{justify-content:space-between;}
+  .gap8{gap:8px;} .gap10{gap:10px;} .gap12{gap:12px;} .gap16{gap:16px;}
+  .muted{color:var(--slate);}
+  .small{font-size:12.5px;}
+  .btn{border:none;border-radius:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:transform .15s ease, filter .15s ease;}
+  .btn:active{transform:scale(0.97);}
+  .btn-primary{background:var(--forest);color:#fff;padding:15px;font-size:15px;width:100%;box-shadow:0 10px 20px rgba(214,38,110,0.28);}
+  .btn-marigold{background:var(--marigold);color:#2A1B00;padding:15px;font-size:15px;width:100%;box-shadow:0 10px 20px rgba(255,177,0,0.32);}
+  .btn-outline{background:transparent;border:1.5px solid var(--line);color:var(--ink);padding:13px;font-size:14px;width:100%;}
+  .btn-ghost{background:transparent;color:var(--slate);font-size:13px;font-weight:600;padding:6px;}
+  .back-btn{width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;}
+  .topbar{display:flex;align-items:center;gap:12px;padding:18px 20px 4px;}
+  .topbar h2{margin:0;font-size:19px;font-family:'Baloo 2',sans-serif;}
+  .card{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--line);}
+  .chip{display:inline-flex;align-items:center;gap:5px;background:#E7F6E8;color:var(--mint-dark);font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:20px;}
+  .chip.urgent{background:#FDE1EA;color:var(--coral-dark);}
+  .chip.plain{background:#fff;border:1px solid var(--line);color:var(--slate);}
+  input,select,textarea{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font-family:'Inter',sans-serif;font-size:14px;background:#fff;color:var(--ink);}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--forest);outline-offset:1px;}
+  label.field-label{font-size:12px;font-weight:700;color:var(--slate);margin-bottom:6px;display:block;text-transform:uppercase;letter-spacing:0.4px;}
+
+  .bottomnav{position:absolute;left:0;right:0;bottom:0;height:74px;background:#fff;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-around;border-radius:0 0 30px 30px;z-index:40;}
+  .navitem{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--slate-light);font-size:10.5px;font-weight:700;}
+  .navitem .ic{font-size:19px;}
+  .navitem.active{color:var(--forest);}
+
+  /* Splash */
+  .splash{background:radial-gradient(circle at 30% 20%, #4A0F30 0%, #2B0A1E 70%);color:#fff;align-items:center;justify-content:center;text-align:center;}
+  .splash .display{font-size:48px;color:var(--marigold);}
+  .check-orbit{display:flex;align-items:center;gap:10px;margin:20px 0;}
+  .check-dot{width:10px;height:10px;border-radius:3px;background:var(--mint);}
+  .check-dot:nth-child(2){background:var(--marigold);}
+  .check-dot:nth-child(3){background:var(--coral);}
+
+  /* Auth */
+  .auth-hero{height:170px;background:linear-gradient(135deg,var(--forest) 0%,var(--forest-2) 100%);border-radius:0 0 32px 32px;position:relative;overflow:hidden;flex-shrink:0;}
+  .auth-hero-content{position:relative;z-index:2;padding:26px 24px;color:#fff;}
+  .auth-body{padding:22px 24px 30px;}
+
+  /* Home */
+  .hero-top{background:linear-gradient(135deg,var(--forest) 0%,var(--forest-2) 100%);border-radius:0 0 30px 30px;padding:20px 20px 30px;color:#fff;}
+  .progress-wrap{display:flex;align-items:center;gap:16px;margin-top:16px;}
+  .ring{width:74px;height:74px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:conic-gradient(var(--marigold) 0% 0%, rgba(255,255,255,0.15) 0% 100%);}
+  .ring-inner{width:58px;height:58px;border-radius:50%;background:var(--forest-2);display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:16px;}
+
+  .filter-strip{display:flex;gap:8px;overflow-x:auto;padding:14px 20px 4px;flex-shrink:0;}
+  .filter-chip{flex-shrink:0;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:700;background:#fff;border:1px solid var(--line);color:var(--slate);cursor:pointer;}
+  .filter-chip.active{background:var(--forest);color:#fff;border-color:var(--forest);}
+
+  .section-title{font-size:15px;font-weight:800;margin:18px 0 10px;color:var(--slate);text-transform:uppercase;letter-spacing:0.4px;font-size:12px;}
+  .task-list{display:flex;flex-direction:column;gap:10px;}
+  .task-item{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 14px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;}
+  .task-item.done{opacity:0.55;}
+  .task-item.done .task-title{text-decoration:line-through;}
+  .checkbox{
+    width:23px;height:23px;border-radius:7px;border:2px solid var(--line);flex-shrink:0;margin-top:1px;
+    display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;cursor:pointer;background:#fff;
+  }
+  .checkbox.checked{background:var(--mint);border-color:var(--mint-dark);}
+  .task-title{font-weight:700;font-size:14px;}
+  .task-meta{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;align-items:center;}
+  .tag{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:8px;}
+  .tag.kerja{background:#E7F6E8;color:var(--mint-dark);}
+  .tag.kuliah{background:#FCE4EE;color:var(--forest);}
+  .tag.pribadi{background:#FFF6D8;color:var(--marigold-dark);}
+  .fab{
+    position:absolute;right:20px;bottom:94px;width:56px;height:56px;border-radius:18px;
+    background:var(--marigold);color:#2A1B00;font-size:26px;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 14px 26px rgba(255,177,0,0.4);cursor:pointer;z-index:45;border:none;
+  }
+
+  /* Add task */
+  .priority-row{display:flex;gap:8px;}
+  .priority-btn{flex:1;text-align:center;padding:11px 6px;border-radius:12px;border:1.5px solid var(--line);font-size:12.5px;font-weight:700;color:var(--slate);cursor:pointer;background:#fff;}
+  .priority-btn.sel-low{background:#E7F6E8;border-color:var(--mint);color:var(--mint-dark);}
+  .priority-btn.sel-mid{background:#FFF6D8;border-color:var(--marigold);color:var(--marigold-dark);}
+  .priority-btn.sel-high{background:#FDE1EA;border-color:var(--coral);color:var(--coral-dark);}
+  
+  .cat-row{display:flex;gap:8px;flex-wrap:wrap;}
+  .cat-pick{padding:9px 14px;border-radius:12px;border:1.5px solid var(--line);font-size:12.5px;font-weight:700;cursor:pointer;background:#fff;color:var(--slate);}
+  .cat-pick.active{border-color:var(--forest);background:#FCE4EE;color:var(--forest);}
+
+  .sticky-bottom{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:14px 20px 20px;margin:0 -20px;}
+
+  /* Profile Menu Item Styles */
+  .avatar{width:64px;height:64px;border-radius:50%;background:var(--marigold);color:#2A1B00;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px;font-family:'Baloo 2',sans-serif;}
+  .menu-row{display:flex;align-items:center;gap:14px;padding:14px 4px;border-bottom:1px solid var(--line);cursor:pointer;transition:background 0.2s ease;}
+  .menu-row:hover{background-color:rgba(0,0,0,0.02);}
+  .menu-row:last-child{border-bottom:none;}
+  .menu-ic{width:36px;height:36px;border-radius:10px;background:#F1EEE4;display:flex;align-items:center;justify-content:center;font-size:16px;}
+
+  /* Toggle Switch */
+  .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 24px; }
+  .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+  input:checked + .slider { background-color: var(--forest); }
+  input:checked + .slider:before { transform: translateX(20px); }
+
+  .toast{position:absolute;left:20px;right:20px;bottom:96px;background:var(--ink);color:#fff;padding:13px 16px;border-radius:14px;font-size:13px;font-weight:600;z-index:80;box-shadow:0 12px 24px rgba(0,0,0,0.3);display:none;align-items:center;gap:8px;}
+  .toast.show{display:flex;animation:fadeIn .25s ease;}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="notch"></div>
+  <div class="statusbar"><span>9:41</span><span>DAILY PLAN</span><span>🔋100%</span></div>
+
+  <div class="screens" id="screens">
+
+    <!-- SPLASH -->
+    <div class="screen active splash" id="s-splash">
+      <div class="pad-nonav" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div class="display">Daily Plan</div>
+        <div class="small" style="color:#BFD8CC;letter-spacing:2px;margin-top:4px;">RAPIKAN HARIMU, SATU PER SATU</div>
+        <div class="check-orbit"><span class="check-dot"></span><span class="check-dot"></span><span class="check-dot"></span></div>
+        <p class="small" style="color:#BFD8CC;text-align:center;max-width:250px;line-height:1.6;">
+          Catat tugas, atur prioritas, dan rasakan puas saat semuanya selesai.
+        </p>
+      </div>
+      <div class="pad-nonav" style="padding-top:0;">
+        <button class="btn btn-marigold" onclick="showScreen('s-login')">Mulai Rapikan</button>
+        <button class="btn btn-ghost" style="color:#BFD8CC;width:100%;margin-top:8px;" onclick="showScreen('s-register')">Belum punya akun? Daftar</button>
+      </div>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="screen" id="s-login">
+      <div class="auth-hero">
+        <div class="auth-hero-content">
+          <div class="back-btn" style="background:rgba(255,255,255,0.15);border:none;color:#fff;" onclick="showScreen('s-splash')">←</div>
+          <h1 class="display" style="font-size:30px;margin:18px 0 4px;">Selamat Datang 👋</h1>
+          <div class="small" style="color:#BFD8CC;">Masuk untuk lanjut mengatur to-do list-mu.</div>
+        </div>
+      </div>
+      <div class="auth-body">
+        <label class="field-label">Email</label>
+        <input type="text" value="cipsz22@email.com" style="margin-bottom:14px;">
+        <label class="field-label">Kata Sandi</label>
+        <input type="password" value="dailyplan123" style="margin-bottom:6px;">
+        <div class="row between" style="margin:6px 0 20px;">
+          <span class="small muted">Lupa kata sandi?</span>
+          <span class="small" style="color:var(--mint-dark);font-weight:700;">Reset di sini</span>
+        </div>
+        <button class="btn btn-primary" onclick="toast('Berhasil masuk!'); showScreen('s-home')">Masuk</button>
+        <button class="btn btn-outline" style="margin-top:10px;" onclick="showScreen('s-register')">Buat Akun Baru</button>
+      </div>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="screen" id="s-register">
+      <div class="auth-hero" style="height:110px;">
+        <div class="auth-hero-content">
+          <div class="back-btn" style="background:rgba(255,255,255,0.15);border:none;color:#fff;" onclick="showScreen('s-login')">←</div>
+          <h1 class="display" style="font-size:26px;margin:14px 0 0;">Buat Akun 📝</h1>
+        </div>
+      </div>
+      <div class="auth-body">
+        <label class="field-label">Nama Lengkap</label>
+        <input type="text" placeholder="Cipa Aulia" style="margin-bottom:12px;">
+        <label class="field-label">Email</label>
+        <input type="text" placeholder="cipsz22@email.com" style="margin-bottom:12px;">
+        <label class="field-label">Kata Sandi</label>
+        <input type="password" placeholder="Buat kata sandi" style="margin-bottom:18px;">
+        <button class="btn btn-primary" onclick="toast('Akun berhasil dibuat!'); showScreen('s-home')">Daftar Sekarang</button>
+      </div>
+    </div>
+
+    <!-- HOME / TASK LIST -->
+    <div class="screen" id="s-home">
+      <div class="hero-top">
+        <div class="row between">
+          <div>
+            <div class="small" style="color:#BFD8CC;">Senin, 20 Juli 2026</div>
+            <div class="display" style="font-size:22px;">Halo, Cipa ✨</div>
+          </div>
+          <div class="back-btn" style="background:rgba(255,255,255,0.15);border:none;color:#fff;" onclick="showScreen('s-profile')">👤</div>
+        </div>
+        <div class="progress-wrap">
+          <div class="ring" id="progress-ring"><div class="ring-inner" id="progress-text">0%</div></div>
+          <div>
+            <div style="font-weight:700;font-size:14px;" id="progress-status">0 dari 0 tugas selesai</div>
+            <div class="small" style="color:#BFD8CC;">Tinggal sedikit lagi, semangat!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTER STRIP -->
+      <div class="filter-strip">
+        <div class="filter-chip active" onclick="filterTasks('Semua', this)">Semua</div>
+        <div class="filter-chip" onclick="filterTasks('Kerja', this)">Kerja</div>
+        <div class="filter-chip" onclick="filterTasks('Kuliah', this)">Kuliah</div>
+        <div class="filter-chip" onclick="filterTasks('Pribadi', this)">Pribadi</div>
+      </div>
+
+      <div class="pad" style="padding-top:6px;flex:1;">
+        <div class="section-title">Daftar Tugas</div>
+        <div class="task-list" id="main-task-container">
+          <!-- Tugas dirender lewat JavaScript -->
+        </div>
+      </div>
+
+      <button class="fab" onclick="showScreen('s-addtask')">+</button>
+      <div class="bottomnav" id="nav-home"></div>
+    </div>
+
+    <!-- ADD TASK -->
+    <div class="screen" id="s-addtask">
+      <div class="topbar">
+        <div class="back-btn" onclick="showScreen('s-home')">←</div>
+        <h2>Tugas Baru</h2>
+      </div>
+      <div class="pad-nonav" style="flex:1;">
+        <label class="field-label">Judul Tugas</label>
+        <input type="text" id="input-task-title" placeholder="Contoh: Kerjakan laporan UAS" style="margin-bottom:16px;">
+
+        <label class="field-label">Catatan (opsional)</label>
+        <textarea rows="3" id="input-task-desc" placeholder="Tambahkan detail tugas..." style="margin-bottom:16px;"></textarea>
+
+        <label class="field-label">Kategori</label>
+        <div class="cat-row" style="margin-bottom:16px;">
+          <div class="cat-pick active" onclick="selectCategory(this, 'Kuliah')">📘 Kuliah</div>
+          <div class="cat-pick" onclick="selectCategory(this, 'Kerja')">💼 Kerja</div>
+          <div class="cat-pick" onclick="selectCategory(this, 'Pribadi')">🌱 Pribadi</div>
+        </div>
+
+        <label class="field-label">Prioritas</label>
+        <div class="priority-row" style="margin-bottom:16px;">
+          <div class="priority-btn sel-low" onclick="selectPriority(this, '🟢 Santai')">🟢 Santai</div>
+          <div class="priority-btn" onclick="selectPriority(this, '🟡 Sedang')">🟡 Sedang</div>
+          <div class="priority-btn" onclick="selectPriority(this, '🔴 Tinggi')">🔴 Tinggi</div>
+        </div>
+
+        <div class="row gap12">
+          <div style="flex:1;">
+            <label class="field-label">Tenggat</label>
+            <input type="date" id="input-task-date" value="2026-07-23">
+          </div>
+          <div style="flex:1;">
+            <label class="field-label">Jam</label>
+            <input type="time" id="input-task-time" value="18:00">
+          </div>
+        </div>
+      </div>
+      <div class="sticky-bottom">
+        <button class="btn btn-primary" onclick="addNewTask()">Simpan Tugas</button>
+      </div>
+    </div>
+
+    <!-- TASK DETAIL -->
+    <div class="screen" id="s-taskdetail">
+      <div class="topbar">
+        <div class="back-btn" onclick="showScreen('s-home')">←</div>
+        <h2>Detail Tugas</h2>
+      </div>
+      <div class="pad-nonav" style="flex:1;">
+        <div class="row gap10" style="margin-bottom:6px;">
+          <span class="tag" id="detail-tag">Kuliah</span>
+          <span class="chip" id="detail-priority">🔴 Prioritas Tinggi</span>
+        </div>
+        <div class="display" id="detail-title" style="font-size:20px;margin-bottom:6px;">-</div>
+        <div class="small muted" id="detail-date">⏰ Tenggat: -</div>
+
+        <div class="card" style="margin-top:16px;">
+          <div class="small muted" style="margin-bottom:6px;">Catatan</div>
+          <div class="small" id="detail-desc">-</div>
+        </div>
+      </div>
+      <div class="sticky-bottom">
+        <button class="btn btn-primary" onclick="completeCurrentTask()">Tandai Selesai</button>
+        <button class="btn btn-ghost" style="width:100%;margin-top:6px;color:var(--coral-dark);" onclick="deleteCurrentTask()">Hapus Tugas</button>
+      </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="screen" id="s-categories">
+      <div class="topbar"><h2>Kategori</h2></div>
+      <div class="pad">
+        <div class="cat-card" onclick="openCategoryFilter('Kerja')">
+          <div class="cat-ic" style="background:#E7F6E8;">💼</div>
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:14.5px;">Kerja</div>
+            <div class="small muted" id="count-kerja">0 tugas aktif</div>
+          </div>
+          <span class="muted">›</span>
+        </div>
+        <div class="cat-card" onclick="openCategoryFilter('Kuliah')">
+          <div class="cat-ic" style="background:#FCE4EE;">📘</div>
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:14.5px;">Kuliah</div>
+            <div class="small muted" id="count-kuliah">0 tugas aktif</div>
+          </div>
+          <span class="muted">›</span>
+        </div>
+        <div class="cat-card" onclick="openCategoryFilter('Pribadi')">
+          <div class="cat-ic" style="background:#FFF6D8;">🌱</div>
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:14.5px;">Pribadi</div>
+            <div class="small muted" id="count-pribadi">0 tugas aktif</div>
+          </div>
+          <span class="muted">›</span>
+        </div>
+      </div>
+      <div class="bottomnav" id="nav-categories"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="screen" id="s-stats">
+      <div class="topbar"><h2>Statistik</h2></div>
+      <div class="pad">
+        <div class="streak-card">
+          <div class="small" style="opacity:0.75;">Streak Konsisten</div>
+          <div class="display" style="font-size:30px;">🔥 12 Hari</div>
+          <div class="small" style="margin-top:4px;">Kamu menyelesaikan minimal 1 tugas selama 12 hari berturut-turut!</div>
+        </div>
+
+        <div class="row gap12" style="margin-top:16px;">
+          <div class="stat-card" style="flex:1;">
+            <div class="display" style="font-size:22px;color:var(--mint-dark);" id="stat-completed">0</div>
+            <div class="small muted">Selesai</div>
+          </div>
+          <div class="stat-card" style="flex:1;">
+            <div class="display" style="font-size:22px;color:var(--coral-dark);" id="stat-pending">0</div>
+            <div class="small muted">Belum Selesai</div>
+          </div>
+        </div>
+      </div>
+      <div class="bottomnav" id="nav-stats"></div>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="screen" id="s-profile">
+      <div class="pad" style="padding-top:26px;">
+        <div class="row gap16">
+          <div class="avatar">CA</div>
+          <div>
+            <div style="font-weight:800;font-size:17px;">Cipa Aulia</div>
+            <div class="small muted">cipsz22@email.com</div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:20px;padding:6px 16px;">
+          <div class="menu-row" onclick="showScreen('s-home')">
+            <div class="menu-ic">🏠</div>
+            <div style="flex:1; font-weight:700; font-size:14px;">Tugas Saya</div>
+            <span class="muted">›</span>
+          </div>
+          <div class="menu-row" onclick="showScreen('s-categories')">
+            <div class="menu-ic">🗂️</div>
+            <div style="flex:1; font-weight:700; font-size:14px;">Kategori</div>
+            <span class="muted">›</span>
+          </div>
+          <div class="menu-row" onclick="showScreen('s-stats')">
+            <div class="menu-ic">📊</div>
+            <div style="flex:1; font-weight:700; font-size:14px;">Statistik</div>
+            <span class="muted">›</span>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px;padding:6px 16px;">
+          <div class="menu-row" onclick="showScreen('s-notifications')">
+            <div class="menu-ic">🔔</div>
+            <div style="flex:1; font-weight:700; font-size:14px;">Notifikasi & Pengingat</div>
+            <span class="muted">›</span>
+          </div>
+          <div class="menu-row" onclick="showScreen('s-settings')">
+            <div class="menu-ic">⚙️</div>
+            <div style="flex:1; font-weight:700; font-size:14px;">Pengaturan</div>
+            <span class="muted">›</span>
+          </div>
+          <div class="menu-row" onclick="handleLogout()">
+            <div class="menu-ic">🚪</div>
+            <div style="flex:1; font-weight:700; font-size:14px; color:var(--coral-dark);">Keluar</div>
+            <span class="muted">›</span>
+          </div>
+        </div>
+      </div>
+      <div class="bottomnav" id="nav-profile"></div>
+    </div>
+
+    <!-- NOTIFIKASI -->
+    <div class="screen" id="s-notifications">
+      <div class="topbar">
+        <div class="back-btn" onclick="showScreen('s-profile')">←</div>
+        <h2>Notifikasi & Pengingat</h2>
+      </div>
+      <div class="pad-nonav" style="flex:1;">
+        <div class="card" style="margin-top:10px;">
+          <div class="row between" style="padding:8px 0; border-bottom:1px solid var(--line);">
+            <div>
+              <div style="font-size:14px; font-weight:700;">Pengingat Tugas</div>
+              <div class="small muted">Dapatkan notifikasi sebelum tenggat</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" checked onchange="toast('Pengingat tugas diperbarui')">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PENGATURAN -->
+    <div class="screen" id="s-settings">
+      <div class="topbar">
+        <div class="back-btn" onclick="showScreen('s-profile')">←</div>
+        <h2>Pengaturan</h2>
+      </div>
+      <div class="pad-nonav" style="flex:1;">
+        <div class="card" style="margin-top:10px;">
+          <div class="menu-row" onclick="toast('Mode Gelap belum tersedia')">
+            <div style="flex:1; font-size:14px; font-weight:700;">Tema Aplikasi</div>
+            <span class="small muted">Terang ›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast">✓ <span id="toast-text">Berhasil</span></div>
+</div>
+
+<script>
+  // Data State
+  let tasks = [
+    { id: 1, title: 'Kerjakan artikel PKn tentang etika TI', category: 'Kuliah', priority: '🔴 Tinggi', date: '23 Jul', desc: 'Framework etika Pancasila ke SDLC, sumber kutipan akademik.', done: false },
+    { id: 2, title: 'Revisi laporan SWOT Matcha Corner', category: 'Pribadi', priority: '🟡 Sedang', date: '21 Jul', desc: 'Fokus pada kelemahan rantai pasokan bahan baku.', done: false },
+    { id: 3, title: 'Submit Tugas 3 Sistem Operasi', category: 'Kuliah', priority: '🔴 Tinggi', date: 'Selesai 09:40', desc: 'Modul Manajemen Memori Virtual.', done: true },
+    { id: 4, title: 'Balas email dosen Analisis Sistem', category: 'Kerja', priority: '🟢 Santai', date: 'Selesai 08:15', desc: 'Konfirmasi jadwal bimbingan.', done: true },
+    { id: 5, title: 'Latihan soal Matematika Diskrit - Graf', category: 'Kuliah', priority: '🟢 Santai', date: '24 Jul', desc: 'Bab 5 mengenai Lintasan Euler.', done: false }
+  ];
+
+  let currentCategoryFilter = 'Semua';
+  let selectedCategoryInput = 'Kuliah';
+  let selectedPriorityInput = '🔴 Tinggi';
+  let selectedTaskId = null;
+
+  // Bottom Navigation setup
+  const NAV_ITEMS = [
+    {icon:'✅', label:'Tugas', target:'s-home'},
+    {icon:'🗂️', label:'Kategori', target:'s-categories'},
+    {icon:'📊', label:'Statistik', target:'s-stats'},
+    {icon:'👤', label:'Profil', target:'s-profile'},
+  ];
+
+  const navMounts = ['nav-home','nav-categories','nav-stats','nav-profile'];
+  navMounts.forEach(mountId=>{
+    const mount = document.getElementById(mountId);
+    if(!mount) return;
+    NAV_ITEMS.forEach(item=>{
+      const el = document.createElement('div');
+      el.className = 'navitem' + (mountId === 'nav-' + item.target.replace('s-','') ? ' active' : '');
+      el.innerHTML = `<span class="ic">${item.icon}</span><span>${item.label}</span>`;
+      el.onclick = ()=>showScreen(item.target);
+      mount.appendChild(el);
+    });
+  });
+
+  function showScreen(id){
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.getElementById(id).scrollTop = 0;
+    renderTasks();
+  }
+
+  // Render Daftar Tugas & Filter
+  function renderTasks() {
+    const container = document.getElementById('main-task-container');
+    container.innerHTML = '';
+
+    const filtered = tasks.filter(t => currentCategoryFilter === 'Semua' || t.category === currentCategoryFilter);
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--slate);" class="small">Tidak ada tugas di kategori ini</div>`;
+    } else {
+      filtered.forEach(t => {
+        const item = document.createElement('div');
+        item.className = `task-item ${t.done ? 'done' : ''}`;
+        item.onclick = () => openTaskDetail(t.id);
+
+        let catClass = t.category.toLowerCase();
+        
+        item.innerHTML = `
+          <div class="checkbox ${t.done ? 'checked' : ''}" onclick="event.stopPropagation(); toggleTaskDone(${t.id})">${t.done ? '✓' : ''}</div>
+          <div style="flex:1;">
+            <div class="task-title">${t.title}</div>
+            <div class="task-meta">
+              <span class="tag ${catClass}">${t.category}</span>
+              <span class="chip ${t.priority.includes('Tinggi') ? 'urgent' : 'plain'}">${t.priority}</span>
+              <span class="small muted">⏰ ${t.date}</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // Update Progress Ring & Counter
+    const completedCount = tasks.filter(t => t.done).length;
+    const totalCount = tasks.length;
+    const percent = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
+
+    document.getElementById('progress-ring').style.background = `conic-gradient(var(--marigold) 0% ${percent}%, rgba(255,255,255,0.15) ${percent}% 100%)`;
+    document.getElementById('progress-text').textContent = `${percent}%`;
+    document.getElementById('progress-status').textContent = `${completedCount} dari ${totalCount} tugas selesai`;
+
+    // Update Counter Kategori
+    document.getElementById('count-kerja').textContent = `${tasks.filter(t=>t.category==='Kerja' && !t.done).length} tugas aktif`;
+    document.getElementById('count-kuliah').textContent = `${tasks.filter(t=>t.category==='Kuliah' && !t.done).length} tugas aktif`;
+    document.getElementById('count-pribadi').textContent = `${tasks.filter(t=>t.category==='Pribadi' && !t.done).length} tugas aktif`;
+
+    // Update Statistik
+    document.getElementById('stat-completed').textContent = completedCount;
+    document.getElementById('stat-pending').textContent = totalCount - completedCount;
+  }
+
+  function filterTasks(cat, element) {
+    currentCategoryFilter = cat;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    if(element) element.classList.add('active');
+    renderTasks();
+  }
+
+  function openCategoryFilter(cat) {
+    currentCategoryFilter = cat;
+    const chips = document.querySelectorAll('.filter-chip');
+    chips.forEach(chip => {
+      if(chip.textContent.trim() === cat) chip.classList.add('active');
+      else chip.classList.remove('active');
+    });
+    showScreen('s-home');
+  }
+
+  // Tambah Tugas
+  function selectCategory(el, cat) {
+    document.querySelectorAll('.cat-pick').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    selectedCategoryInput = cat;
+  }
+
+  function selectPriority(btn, prio) {
+    document.querySelectorAll('.priority-btn').forEach(b => b.classList.remove('sel-low','sel-mid','sel-high'));
+    if(prio.includes('Santai')) btn.classList.add('sel-low');
+    else if(prio.includes('Sedang')) btn.classList.add('sel-mid');
+    else btn.classList.add('sel-high');
+    selectedPriorityInput = prio;
+  }
+
+  function addNewTask() {
+    const titleInput = document.getElementById('input-task-title');
+    const descInput = document.getElementById('input-task-desc');
+    const dateInput = document.getElementById('input-task-date');
+
+    if(!titleInput.value.trim()){
+      toast('Judul tugas tidak boleh kosong!');
+      return;
+    }
+
+    const newTask = {
+      id: Date.now(),
+      title: titleInput.value.trim(),
+      category: selectedCategoryInput,
+      priority: selectedPriorityInput,
+      date: dateInput.value ? new Date(dateInput.value).toLocaleDateString('id-ID', {day:'numeric', month:'short'}) : 'Hari ini',
+      desc: descInput.value.trim() || 'Tidak ada catatan.',
+      done: false
+    };
+
+    tasks.unshift(newTask);
+    titleInput.value = '';
+    descInput.value = '';
+    
+    toast('Tugas berhasil ditambahkan!');
+    showScreen('s-home');
+  }
+
+  // Toggle & Detail Tugas
+  function toggleTaskDone(id) {
+    const task = tasks.find(t => t.id === id);
+    if(task) {
+      task.done = !task.done;
+      renderTasks();
+    }
+  }
+
+  function openTaskDetail(id) {
+    const task = tasks.find(t => t.id === id);
+    if(!task) return;
+
+    selectedTaskId = id;
+    document.getElementById('detail-title').textContent = task.title;
+    document.getElementById('detail-tag').textContent = task.category;
+    document.getElementById('detail-tag').className = `tag ${task.category.toLowerCase()}`;
+    document.getElementById('detail-priority').textContent = task.priority;
+    document.getElementById('detail-date').textContent = `⏰ Tenggat: ${task.date}`;
+    document.getElementById('detail-desc').textContent = task.desc;
+
+    showScreen('s-taskdetail');
+  }
+
+  function completeCurrentTask() {
+    if(selectedTaskId) {
+      toggleTaskDone(selectedTaskId);
+      toast('Status tugas diperbarui!');
+      showScreen('s-home');
+    }
+  }
+
+  function deleteCurrentTask() {
+    if(selectedTaskId) {
+      tasks = tasks.filter(t => t.id !== selectedTaskId);
+      toast('Tugas telah dihapus');
+      showScreen('s-home');
+    }
+  }
+
+  function handleLogout(){
+    if(confirm('Apakah kamu yakin ingin keluar dari Daily Plan?')){
+      toast('Kamu berhasil keluar');
+      showScreen('s-splash');
+    }
+  }
+
+  let toastTimer;
+  function toast(msg){
+    const t = document.getElementById('toast');
+    document.getElementById('toast-text').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+  }
+
+  // Inisialisasi awal
+  window.onload = function() {
+    renderTasks();
+  }
+</script>
+</body>
+</html>
